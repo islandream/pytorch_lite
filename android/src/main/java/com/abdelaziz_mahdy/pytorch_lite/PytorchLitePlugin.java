@@ -129,7 +129,23 @@ result.error(e);
                     + ") " + "does not match with model input type", e);
             result.error(e);
         }
-        result.success(Collections.singletonList(outputTensor));
+        
+        //기존코드(문제의 코드)
+        //result.success(Collections.singletonList(outputTensor));
+        
+        // 수정된 코드 (해결책)
+        // 1. Tensor 객체에서 실제 데이터인 float 배열을 추출합니다.
+        float[] floatArray = outputTensor.getDataAsFloatArray();
+        
+        // 2. Dart와 통신하기 위해 float 배열을 List<Double> 형태로 변환합니다.
+        List<Double> resultList = new ArrayList<>();
+        for (float value : floatArray) {
+            resultList.add((double) value);
+        }
+        
+        // 3. 최종적으로 변환된 숫자 리스트를 Dart로 반환합니다.
+        //    (사용자님의 기존 Dart 코드 파싱 로직과 맞추기 위해 한번 더 리스트로 감싸줍니다.)
+        result.success(Collections.singletonList(resultList));
     }
 
 
